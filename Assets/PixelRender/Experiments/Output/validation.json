@@ -1,0 +1,283 @@
+{
+  "source": "D:\\project\\TA\\Assets\\PixelRender\\Experiments\\Output\\Source.png",
+  "source_size": [
+    1280,
+    720
+  ],
+  "working_size": [
+    640,
+    360
+  ],
+  "colors": 16,
+  "runs": [
+    {
+      "size": [
+        80,
+        45
+      ],
+      "unique_colors": {
+        "Nearest": 16,
+        "Area": 16,
+        "Joint": 16
+      },
+      "seconds": 5.11,
+      "history": [
+        {
+          "iteration": 1,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.990996731581072
+        },
+        {
+          "iteration": 2,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.511124442131267
+        },
+        {
+          "iteration": 3,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.423476476610771
+        },
+        {
+          "iteration": 4,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.370754119582324
+        },
+        {
+          "iteration": 5,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.352354470898232
+        },
+        {
+          "iteration": 6,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.338242918943623
+        },
+        {
+          "iteration": 7,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.332053127068935
+        },
+        {
+          "iteration": 8,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.329604441266108
+        },
+        {
+          "iteration": 9,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.328557467573079
+        },
+        {
+          "iteration": 10,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.327861408622455
+        },
+        {
+          "iteration": 11,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.327104280794678
+        },
+        {
+          "iteration": 12,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.326631363240926
+        },
+        {
+          "iteration": 13,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.326261559383425
+        },
+        {
+          "iteration": 14,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.326086184553526
+        },
+        {
+          "iteration": 15,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325967188323846
+        },
+        {
+          "iteration": 16,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325679293117727
+        },
+        {
+          "iteration": 17,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325441409617971
+        },
+        {
+          "iteration": 18,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325364909711029
+        },
+        {
+          "iteration": 19,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325389109414374
+        },
+        {
+          "iteration": 20,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325367131402079
+        },
+        {
+          "iteration": 21,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325395247601236
+        },
+        {
+          "iteration": 22,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325358092129852
+        },
+        {
+          "iteration": 23,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325310375176823
+        },
+        {
+          "iteration": 24,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.325210619040186
+        }
+      ]
+    },
+    {
+      "size": [
+        128,
+        72
+      ],
+      "unique_colors": {
+        "Nearest": 16,
+        "Area": 16,
+        "Joint": 16
+      },
+      "seconds": 5.52,
+      "history": [
+        {
+          "iteration": 1,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.896122276021472
+        },
+        {
+          "iteration": 2,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.173006600914379
+        },
+        {
+          "iteration": 3,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.129463788503154
+        },
+        {
+          "iteration": 4,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.112925984482919
+        },
+        {
+          "iteration": 5,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.107987057144847
+        },
+        {
+          "iteration": 6,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.106345904713839
+        },
+        {
+          "iteration": 7,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.104772586958994
+        },
+        {
+          "iteration": 8,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103821938018367
+        },
+        {
+          "iteration": 9,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103243057102356
+        },
+        {
+          "iteration": 10,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103152590272684
+        },
+        {
+          "iteration": 11,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103103039754208
+        },
+        {
+          "iteration": 12,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103065825973673
+        },
+        {
+          "iteration": 13,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103029615527822
+        },
+        {
+          "iteration": 14,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.10302242838641
+        },
+        {
+          "iteration": 15,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 16,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 17,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 18,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 19,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 20,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 21,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 22,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 23,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        },
+        {
+          "iteration": 24,
+          "empty_regions": 0,
+          "mean_assignment_cost": 11.103021407825493
+        }
+      ]
+    }
+  ],
+  "method": "Palette-aware local SLIC + deterministic k-means; no MCDA, bilateral filter, importance map or temporal coherence"
+}

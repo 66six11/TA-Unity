@@ -1,0 +1,110 @@
+#pragma kernel Initialize
+#pragma kernel Simulate
+#include "SurfaceDustParticle.hlsl"
+
+struct SurfaceTriangle
+{
+    float4 aCdf;
+    float4 b;
+    float4 c;
+    float4 n0;
+    float4 n1;
+    float4 n2;
+};
+StructuredBuffer<SurfaceTriangle> _Triangles;
+RWStructuredBuffer<DustParticle> _Particles;
+uint _ParticleCount, _TriangleCount;
+float4x4 _SourceToWorld, _NormalToWorld;
+float4 _LifetimeSize, _Emission, _WindDrag, _Flow;
+
+uint Hash(uint x)
+{
+    x ^= x >> 16; x *= 0x7feb352du;
+    x ^= x >> 15; x *= 0x846ca68bu;
+    return x ^ (x >> 16);
+}
+float Random(inout uint state)
+{
+    state = Hash(state + 0x9e3779b9u);
+    return (state >> 8) * (1.0 / 16777216.0);
+}
+
+void Spawn(inout DustParticle p)
+{
+    float choice = Random(p.seed);
+    uint low = 0, high = _TriangleCount - 1;
+    while (low < high)
+    {
+        uint mid = low + (high - low) / 2;
+        if (choice < _Triangles[mid].aCdf.w) high = mid;
+        else low = mid + 1;
+    }
+    SurfaceTriangle tri = _Triangles[low];
+    float s = sqrt(Random(p.seed));
+    float t = Random(p.seed);
+    float3 bary = float3(1 - s, s * (1 - t), s * t);
+    float3 localPosition = tri.aCdf.xyz * bary.x + tri.b.xyz * bary.y + tri.c.xyz * bary.z;
+    float3 localNormal = tri.n0.xyz * bary.x + tri.n1.xyz * bary.y + tri.n2.xyz * bary.z;
+    if (dot(localNormal, localNormal) < 1e-10)
+        localNormal = cross(tri.b.xyz - tri.aCdf.xyz, tri.c.xyz - tri.aCdf.xyz);
+    float3 normal = normalize(mul((float3x3)_NormalToWorld, localNormal));
+    p.position = mul(_SourceToWorld, float4(localPosition, 1)).xyz + normal * _Emission.y;
+    p.velocity = normal * _Emission.x * lerp(0.65, 1.35, Random(p.seed));
+    p.age = 0;
+    p.lifetime = lerp(_LifetimeSize.x, _LifetimeSize.y, Random(p.seed));
+    p.size = lerp(_LifetimeSize.z, _LifetimeSize.w, Random(p.seed));
+    p.travel = 0;
+    p.padding = 0;
+}
+
+// Analytic curl of A=(sin(y+t)+.5cos(z-t), sin(z+.7t)+.5cos(x+t),
+// sin(x-.8t)+.5cos(y+t)). Coherent and divergence-free before drag.
+float3 CurlFlow(float3 position, float time)
+{
+    float3 q = position * _Flow.y;
+    return float3(-0.5 * sin(q.y + time) - cos(q.z + time * 0.7),
+                  -0.5 * sin(q.z - time) - cos(q.x - time * 0.8),
+                  -0.5 * sin(q.x + time) - cos(q.y + time)) * 0.65;
+}
+
+[numthreads(128, 1, 1)]
+void Initialize(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= _ParticleCount) return;
+    DustParticle p = (DustParticle)0;
+    p.seed = Hash(id.x + 1337u);
+    Spawn(p);
+    // Stagger first births. No CPU emission loop and no first-frame burst.
+    p.age = -lerp(0.001, _LifetimeSize.y, Random(p.seed));
+    _Particles[id.x] = p;
+}
+
+[numthreads(128, 1, 1)]
+void Simulate(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= _ParticleCount) return;
+    DustParticle p = _Particles[id.x];
+    float dt = _Flow.w;
+    if (p.age < 0)
+    {
+        p.age += dt;
+        if (p.age >= 0) Spawn(p);
+    }
+    else
+    {
+        p.age += dt;
+        if (p.age >= p.lifetime || p.travel >= _Emission.z) Spawn(p);
+        else
+        {
+            float3 acceleration = _WindDrag.xyz + CurlFlow(p.position, _Flow.z * 0.45) * _Flow.x;
+            p.velocity = (p.velocity + acceleration * dt) * exp(-_WindDrag.w * dt);
+            float3 displacement = p.velocity * dt;
+            // Cap actual travelled distance, so CPU bounds do not require GPU readback.
+            float distance = length(displacement);
+            displacement *= min(1.0, max(0, _Emission.z - p.travel) / max(distance, 1e-8));
+            p.position += displacement;
+            p.travel = min(_Emission.z, p.travel + distance);
+        }
+    }
+    _Particles[id.x] = p;
+}

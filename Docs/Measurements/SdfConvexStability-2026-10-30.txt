@@ -1,0 +1,1 @@
+PASS rendered 10 angles 0..90 degrees, orthographic sphere, 1280x720. Projection U RGB MAE vs angle0 over active union: mean=0.007541, worst=0.010477. This measures a symmetric sphere only, not arbitrary convex or occluded shapes.

@@ -1,0 +1,8 @@
+2026-10-28T20:36:52.3096584+08:00
+NVIDIA GeForce RTX 4060 Laptop GPU / Direct3D12
+PASS: point light distance 2 -> 4: 0.249950 -> 0.062300.
+PASS: spot cone facing 0.062300, turned away 0.000000.
+PASS: intensity doubles; uniform smoke light T 0.317429, analytic 0.317429; no-light output RGB=0 / T=1.
+Captured volume light count: 1
+PASS: default-layer scene spotlight affects volume; disabling it and turning its cone changes integrated scattering; all 11 volume views exported.
+Saved separate VolumeSmokeLightingDemo.unity; current scene and user lights preserved.

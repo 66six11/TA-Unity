@@ -1,0 +1,257 @@
+#pragma kernel Clear
+#pragma kernel AdvectVelocity
+#pragma kernel Forces
+#pragma kernel ComputeCurl
+#pragma kernel Confinement
+#pragma kernel ComputeDivergence
+#pragma kernel Jacobi
+#pragma kernel Project
+#pragma kernel AdvectDensity
+#pragma kernel ClearSources
+#pragma kernel ReconstructScreenSource
+#pragma kernel SceneLighting
+
+Texture3D<float> _Obstacle;
+Texture3D<float4> _SurfaceSourceRead, _SurfaceMotionRead;
+RWTexture3D<float> _ObstacleOut;
+RWTexture3D<float4> _SurfaceSourceOut, _SurfaceMotionOut;
+Texture2D<float> _CapturedDepth, _CapturedBackDepth;
+Texture2D<float4> _CapturedNormal, _CapturedMotion;
+float4x4 _CaptureVP, _CaptureInverseVP, _CaptureView;
+float4 _CaptureDomainMinSize; // xyz = world min; w = cube side length
+float4 _CaptureParameters; // Y flip, device depth scale, device depth bias, surface band world radius
+float _MaxSourceSpeed, _InheritSourceMotion;
+Texture3D<float4> _VelocityRead, _CurlRead;
+RWTexture3D<float4> _VelocityOut, _CurlOut;
+Texture3D<float> _DensityRead, _PressureRead, _DivergenceRead;
+RWTexture3D<float> _DensityOut, _PressureOut, _DivergenceOut;
+SamplerState sampler_linear_clamp;
+int _Size;
+float _Dt,_TimeValue,_CellSize,_Dissipation;
+float4 _Source,_Forces,_WindDrag;
+// Per-camera RenderGraph output: RGB is incident radiance including phase and
+// smoke attenuation; A is radiance-weighted light-path transmittance (1 if unlit).
+RWTexture3D<float4> _SceneLightOut;
+float4 _VolumeLightPosition[8], _VolumeLightColor[8], _VolumeLightDirection[8], _VolumeLightCone[8];
+int _VolumeLightCount, _VolumeLightSteps;
+float4 _LightingBoundsMin, _LightingBoundsSize, _LightingCamera;
+float _LightingExtinction, _LightingAnisotropy;
+
+[numthreads(4,4,4)]
+void SceneLighting(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    float3 uv=(id+0.5)/_Size;
+    float3 world=_LightingBoundsMin.xyz+uv*_LightingBoundsSize.xyz;
+    float3 outgoing=normalize(_LightingCamera.xyz-world);
+    float3 radiance=0;float weightedT=0,totalWeight=0;
+    [loop]for(int lightIndex=0;lightIndex<_VolumeLightCount;lightIndex++)
+    {
+        float4 position=_VolumeLightPosition[lightIndex];
+        float3 delta=position.xyz-world;
+        float distanceSqr=max(dot(delta,delta),0.01);
+        float distanceToLight=sqrt(distanceSqr);
+        float3 toLight=position.w<0.5?-_VolumeLightDirection[lightIndex].xyz:delta/distanceToLight;
+        float attenuation=1;
+        if(position.w>0.5)
+        {
+            float fade=saturate(1-pow(distanceSqr*_VolumeLightColor[lightIndex].w,2));
+            attenuation=fade*fade/distanceSqr;
+            if(position.w>1.5)
+            {
+                float cone=saturate((dot(-toLight,_VolumeLightDirection[lightIndex].xyz)-_VolumeLightCone[lightIndex].x)*_VolumeLightCone[lightIndex].y);
+                attenuation*=cone*cone;
+            }
+        }
+        if(attenuation<1e-7)continue;
+        float3 exitDistances=(_LightingBoundsMin.xyz+step(0,toLight)*_LightingBoundsSize.xyz-world)/
+            (sign(toLight+1e-8)*max(abs(toLight),1e-6));
+        float path=max(0,min(exitDistances.x,min(exitDistances.y,exitDistances.z)));
+        if(position.w>0.5)path=min(path,distanceToLight);
+        float ds=path/_VolumeLightSteps,opticalDepth=0;
+        [loop]for(int j=0;j<_VolumeLightSteps;j++)
+        {
+            float3 sampleWorld=world+toLight*((j+0.5)*ds);
+            float3 sampleUV=(sampleWorld-_LightingBoundsMin.xyz)/_LightingBoundsSize.xyz;
+            opticalDepth+=max(0,_DensityRead.SampleLevel(sampler_linear_clamp,sampleUV,0))*ds;
+        }
+        float lightT=exp(-opticalDepth*_LightingExtinction);
+        // Henyey-Greenstein relative to isotropic (4*pi factor absorbed in artistic light scale).
+        float g=_LightingAnisotropy,cosTheta=dot(-toLight,outgoing);
+        float phase=(1-g*g)/pow(max(1+g*g-2*g*cosTheta,0.01),1.5);
+        float3 incident=_VolumeLightColor[lightIndex].rgb*attenuation;
+        radiance+=incident*lightT*phase;
+        float weight=dot(incident,float3(0.2126,0.7152,0.0722));
+        weightedT+=weight*lightT;totalWeight+=weight;
+    }
+    _SceneLightOut[id]=float4(min(radiance,60000),totalWeight>1e-7?weightedT/totalWeight:1);
+}
+
+
+int3 ClampCell(int3 p){return clamp(p,0,_Size-1);}
+float Mask(int3 p){return _Obstacle.Load(int4(ClampCell(p),0));}
+bool Solid(int3 p){return any(p<1)||any(p>=_Size-1)||Mask(p)>0.5;}
+float3 Velocity(int3 p){return _VelocityRead.Load(int4(ClampCell(p),0)).xyz;}
+float Pressure(int3 p,float center){return Solid(p)?center:_PressureRead.Load(int4(p,0));}
+float3 Curl(int3 p){return _CurlRead.Load(int4(ClampCell(p),0)).xyz;}
+[numthreads(4,4,4)]
+void Clear(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    _VelocityOut[id]=0;_DensityOut[id]=0;_PressureOut[id]=0;_DivergenceOut[id]=0;_CurlOut[id]=0;
+}
+[numthreads(4,4,4)]
+void AdvectVelocity(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;float3 uv=(p+0.5)/_Size;
+    float3 back=uv-Velocity(p)*_Dt/_Size;
+    if(_Obstacle.SampleLevel(sampler_linear_clamp,back,0)>0.5)back=uv;
+    float3 velocity=_VelocityRead.SampleLevel(sampler_linear_clamp,back,0).xyz*exp(-_WindDrag.w*_Dt);
+    _VelocityOut[p]=float4(Solid(p)?0:velocity,0);
+}
+[numthreads(4,4,4)]
+void Forces(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;if(Solid(p)){_VelocityOut[p]=0;return;}
+    float4 source=_SurfaceSourceRead.Load(int4(p,0));
+    float3 normal=source.xyz;float band=source.w;
+    float3 uv=(p+0.5)/_Size;
+    float modulation=0.15+0.85*pow(0.5+0.5*sin(dot(uv,float3(37,43,29))+_TimeValue*1.5),3);
+    float density=_DensityRead.Load(int4(p,0));
+    float3 acceleration=_WindDrag.xyz+normal*band*modulation*_Forces.y;
+    acceleration.y+=min(density,3)*_Forces.z;
+    float3 radial=(uv-_Source.xyz)*_Size;radial.y=0;
+    acceleration+=cross(float3(0,1,0),radial)*_Source.w*exp(-dot(radial,radial)/(_Size*_Size*0.05));
+    // A weak coherent three-dimensional force breaks rotational symmetry.
+    float3 q=uv*18;float t=_TimeValue*0.5;
+    acceleration+=float3(-sin(q.y+t)*0.5-cos(q.z+t*0.7),
+                         -sin(q.z-t)*0.5-cos(q.x-t*0.8),
+                         -sin(q.x+t)*0.5-cos(q.y+t))*0.2/_CellSize;
+    float3 velocity=Velocity(p)+acceleration*_Dt;
+    float3 inherited=_SurfaceMotionRead.Load(int4(p,0)).xyz*_InheritSourceMotion/_CellSize;
+    velocity=lerp(velocity,inherited,saturate(band*3*_Dt));
+    _VelocityOut[p]=float4(velocity,0);
+}
+[numthreads(4,4,4)]
+void ComputeCurl(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;
+    float3 dx=(Velocity(p+int3(1,0,0))-Velocity(p-int3(1,0,0)))*0.5;
+    float3 dy=(Velocity(p+int3(0,1,0))-Velocity(p-int3(0,1,0)))*0.5;
+    float3 dz=(Velocity(p+int3(0,0,1))-Velocity(p-int3(0,0,1)))*0.5;
+    _CurlOut[p]=float4(Solid(p)?0:float3(dy.z-dz.y,dz.x-dx.z,dx.y-dy.x),0);
+}
+[numthreads(4,4,4)]
+void Confinement(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;
+    float3 gradient=0.5*float3(length(Curl(p+int3(1,0,0)))-length(Curl(p-int3(1,0,0))),
+        length(Curl(p+int3(0,1,0)))-length(Curl(p-int3(0,1,0))),length(Curl(p+int3(0,0,1)))-length(Curl(p-int3(0,0,1))));
+    float3 n=gradient/max(length(gradient),1e-5);
+    _VelocityOut[p]=float4(Solid(p)?0:Velocity(p)+cross(n,Curl(p))*_Forces.w*_Dt,0);
+}
+[numthreads(4,4,4)]
+void ComputeDivergence(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;
+    float right=Solid(p+int3(1,0,0))?0:Velocity(p+int3(1,0,0)).x;
+    float left=Solid(p-int3(1,0,0))?0:Velocity(p).x;
+    float up=Solid(p+int3(0,1,0))?0:Velocity(p+int3(0,1,0)).y;
+    float down=Solid(p-int3(0,1,0))?0:Velocity(p).y;
+    float front=Solid(p+int3(0,0,1))?0:Velocity(p+int3(0,0,1)).z;
+    float back=Solid(p-int3(0,0,1))?0:Velocity(p).z;
+    _DivergenceOut[p]=Solid(p)?0:right-left+up-down+front-back;
+}
+[numthreads(4,4,4)]
+void Jacobi(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;float center=_PressureRead.Load(int4(p,0));
+    float sum=Pressure(p-int3(1,0,0),center)+Pressure(p+int3(1,0,0),center)
+             +Pressure(p-int3(0,1,0),center)+Pressure(p+int3(0,1,0),center)
+             +Pressure(p-int3(0,0,1),center)+Pressure(p+int3(0,0,1),center);
+    _PressureOut[p]=Solid(p)?0:(sum-_DivergenceRead.Load(int4(p,0)))/6;
+}
+[numthreads(4,4,4)]
+void Project(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;float center=_PressureRead.Load(int4(p,0));
+    float3 gradient=float3(center-Pressure(p-int3(1,0,0),center),center-Pressure(p-int3(0,1,0),center),center-Pressure(p-int3(0,0,1),center));
+    float3 velocity=Velocity(p)-gradient;
+    if(Solid(p-int3(1,0,0)))velocity.x=0;
+    if(Solid(p-int3(0,1,0)))velocity.y=0;
+    if(Solid(p-int3(0,0,1)))velocity.z=0;
+    velocity*=min(1,_Size*0.5/max(length(velocity),1e-5));
+    _VelocityOut[p]=float4(Solid(p)?0:velocity,0);
+}
+[numthreads(4,4,4)]
+void AdvectDensity(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    int3 p=id;float3 uv=(p+0.5)/_Size;
+    float3 back=uv-Velocity(p)*_Dt/_Size;
+    if(_Obstacle.SampleLevel(sampler_linear_clamp,back,0)>0.5)back=uv;
+    float density=_DensityRead.SampleLevel(sampler_linear_clamp,back,0)*exp(-_Dissipation*_Dt);
+    float band=_SurfaceSourceRead.Load(int4(p,0)).w;
+    float modulation=0.15+0.85*pow(0.5+0.5*sin(dot(uv,float3(37,43,29))+_TimeValue*1.5),3);
+    density+=band*modulation*_Forces.x*_Dt;
+    float edge=min(min(min(p.x,_Size-1-p.x),min(p.y,_Size-1-p.y)),min(p.z,_Size-1-p.z));
+    _DensityOut[p]=Solid(p)?0:min(density,8)*saturate(edge/2.0);
+}
+[numthreads(4,4,4)]
+void ClearSources(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    _ObstacleOut[id]=0;_SurfaceSourceOut[id]=0;_SurfaceMotionOut[id]=0;
+}
+
+[numthreads(4,4,4)]
+void ReconstructScreenSource(uint3 id:SV_DispatchThreadID)
+{
+    if(any(id>=(uint)_Size))return;
+    _ObstacleOut[id]=0;_SurfaceSourceOut[id]=0;_SurfaceMotionOut[id]=0;
+    float3 world=_CaptureDomainMinSize.xyz+(id+0.5)/_Size*_CaptureDomainMinSize.w;
+    float4 clipPosition=mul(_CaptureVP,float4(world,1));
+    if(clipPosition.w<=0)return;
+    float2 uv=clipPosition.xy/clipPosition.w;
+    uv.y*=_CaptureParameters.x;
+    uv=uv*0.5+0.5;
+    if(any(uv<0)||any(uv>1))return;
+    uint width,height;_CapturedDepth.GetDimensions(width,height);
+    int2 pixel=min(int2(uv*float2(width,height)),int2(width-1,height-1));
+    float4 normalMask=_CapturedNormal.Load(int3(pixel,0));
+    if(normalMask.a<0.5)return;
+    // Reconstruct the actual sample location, not the continuous lookup UV, to
+    // avoid mixing the position of one depth sample with a different camera ray.
+    float2 sampleUV=(pixel+0.5)/float2(width,height);
+    float2 ndc=sampleUV*2-1;ndc.y*=_CaptureParameters.x;
+    float rawDepth=_CapturedDepth.Load(int3(pixel,0));
+    float4 surface=mul(_CaptureInverseVP,float4(ndc,rawDepth*_CaptureParameters.y+_CaptureParameters.z,1));
+    if(abs(surface.w)<1e-7)return;
+    float3 surfaceWorld=surface.xyz/surface.w;
+    float frontEye=-mul(_CaptureView,float4(surfaceWorld,1)).z;
+    float backEye=_CapturedBackDepth.Load(int3(pixel,0));
+    float voxelEye=-mul(_CaptureView,float4(world,1)).z;
+    float cell=_CaptureDomainMinSize.w/_Size;
+    // One front/back interval per pixel is an approximation for concave or layered meshes.
+    bool inside=backEye>frontEye && voxelEye>frontEye+cell*0.15 && voxelEye<backEye-cell*0.15;
+    _ObstacleOut[id]=inside?1:0;
+    if(inside)return;
+    float3 normal=normalMask.xyz/max(length(normalMask.xyz),1e-6);
+    float radius=max(_CaptureParameters.w,cell);
+    float3 target=surfaceWorld+normal*cell*0.75;
+    float distance=length(world-target);
+    float weight=saturate(1-distance/radius);
+    weight=weight*weight*(3-2*weight);
+    if(weight<=0)return;
+    float3 motion=_CapturedMotion.Load(int3(pixel,0)).xyz;
+    motion*=min(1,_MaxSourceSpeed/max(length(motion),1e-6));
+    _SurfaceSourceOut[id]=float4(normal,weight);
+    _SurfaceMotionOut[id]=float4(motion,weight);
+}

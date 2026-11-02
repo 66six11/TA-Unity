@@ -1,0 +1,10 @@
+{
+    "name": "TA.ShadowChromaticDemo.Editor",
+    "rootNamespace": "TA.ShadowChromaticDemo.Editor",
+    "references": [
+        "TA.ShadowChromaticDemo",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": ["Editor"]
+}

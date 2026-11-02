@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="705.6pt" viewBox="0 0 1152 705.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-28T20:36:55.161977</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 705.6 
+L 1152 705.6 
+L 1152 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 49.68 147.6 
+L 342.72 147.6 
+Q 352.8 147.6 352.8 157.68 
+L 352.8 339.12 
+Q 352.8 349.2 342.72 349.2 
+L 49.68 349.2 
+Q 39.6 349.2 39.6 339.12 
+L 39.6 157.68 
+Q 39.6 147.6 49.68 147.6 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #ecf4fc; stroke: #c6d2dd; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 427.68 147.6 
+L 720.72 147.6 
+Q 730.8 147.6 730.8 157.68 
+L 730.8 339.12 
+Q 730.8 349.2 720.72 349.2 
+L 427.68 349.2 
+Q 417.6 349.2 417.6 339.12 
+L 417.6 157.68 
+Q 417.6 147.6 427.68 147.6 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #e8f5f1; stroke: #c6d2dd; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 809.28 147.6 
+L 1102.32 147.6 
+Q 1112.4 147.6 1112.4 157.68 
+L 1112.4 339.12 
+Q 1112.4 349.2 1102.32 349.2 
+L 809.28 349.2 
+Q 799.2 349.2 799.2 339.12 
+L 799.2 157.68 
+Q 799.2 147.6 809.28 147.6 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #e8f5f1; stroke: #c6d2dd; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 356.238413 248.4 
+Q 384.840107 248.4 411.541144 248.4 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 405.541144 245.4 
+L 411.541144 248.4 
+L 405.541144 251.4 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #566b7d; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 734.237314 248.4 
+Q 764.640116 248.4 793.14226 248.4 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 787.14226 245.4 
+L 793.14226 248.4 
+L 787.14226 251.4 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #566b7d; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 49.68 450 
+L 342.72 450 
+Q 352.8 450 352.8 460.08 
+L 352.8 619.92 
+Q 352.8 630 342.72 630 
+L 49.68 630 
+Q 39.6 630 39.6 619.92 
+L 39.6 460.08 
+Q 39.6 450 49.68 450 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #f3edfa; stroke: #c6d2dd; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 427.68 450 
+L 720.72 450 
+Q 730.8 450 730.8 460.08 
+L 730.8 619.92 
+Q 730.8 630 720.72 630 
+L 427.68 630 
+Q 417.6 630 417.6 619.92 
+L 417.6 460.08 
+Q 417.6 450 427.68 450 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #f3edfa; stroke: #c6d2dd; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 809.28 450 
+L 1102.32 450 
+Q 1112.4 450 1112.4 460.08 
+L 1112.4 619.92 
+Q 1112.4 630 1102.32 630 
+L 809.28 630 
+Q 799.2 630 799.2 619.92 
+L 799.2 460.08 
+Q 799.2 450 809.28 450 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #fff4e3; stroke: #c6d2dd; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 955.44 353.359204 
+Q 955.44 399.60053 955.44 443.941198 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 958.44 437.941198 
+L 955.44 443.941198 
+L 952.44 437.941198 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #566b7d; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 795.041411 540 
+Q 764.999146 540 736.857539 540 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 742.857539 543 
+L 736.857539 540 
+L 742.857539 537 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #566b7d; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 356.238413 540 
+Q 384.840107 540 411.541144 540 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 405.541144 537 
+L 411.541144 540 
+L 405.541144 543 
+z
+" clip-path="url(#p62d9d1bd60)" style="fill: #566b7d; stroke: #566b7d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 39.6 104.4 
+L 1112.4 104.4 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #c6d2dd; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 53.28 164.88 
+L 87.84 164.88 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #2563a6; stroke-width: 4; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 431.28 164.88 
+L 465.84 164.88 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #137f77; stroke-width: 4; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 812.88 164.88 
+L 847.44 164.88 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #137f77; stroke-width: 4; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 53.28 467.28 
+L 87.84 467.28 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #7045a2; stroke-width: 4; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 431.28 467.28 
+L 465.84 467.28 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #7045a2; stroke-width: 4; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 812.88 467.28 
+L 847.44 467.28 
+" clip-path="url(#p62d9d1bd60)" style="fill: none; stroke: #a35c13; stroke-width: 4; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 25px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #182a3a" x="39.6" y="55.248828" transform="rotate(-0 39.6 55.248828)">01  屏幕表面输入，世界空间保存烟雾</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #566b7d" x="39.6" y="85.947344" transform="rotate(-0 39.6 85.947344)">当前实现：动态表面捕获 + 固定世界空间三维网格；不是 Froxel 求解器。</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #2563a6" x="53.28" y="198.290469" transform="rotate(-0 53.28 198.290469)">捕获动态模型表面</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 232.402266)">前表面：设备深度、法线 / Mask</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 254.551016)">前表面：三维表面运动速度</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 276.711953)">背表面：最远观察空间深度</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 298.822109)">只由指定 Source Camera 捕获</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #137f77" x="431.28" y="198.306406" transform="rotate(-0 431.28 198.306406)">重建三维源区域</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 232.333203)">体素投影 → 读取同一个像素</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 254.525625)">逆 GPU VP → 三维表面位置</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 276.628672)">法线偏移 → 平滑发射带</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 298.872891)">前后深度 → 近似占据区间</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #137f77" x="812.88" y="198.281172" transform="rotate(-0 812.88 198.281172)">每次捕获更新的 3D 输入</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 232.339297)">Obstacle：近似固体</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 254.512422)">SurfaceSource：法线 + 权重</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 276.711953)">SurfaceMotion：世界表面速度</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 298.789609)">模型移动时重建，不搬走旧烟</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #566b7d" x="385.2" y="238.768516" transform="rotate(-0 385.2 238.768516)">读取</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #566b7d" x="763.2" y="238.863984" transform="rotate(-0 763.2 238.863984)">写入</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #7045a2" x="53.28" y="500.614766" transform="rotate(-0 53.28 500.614766)">场景输入</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 535.953906)">不透明场景颜色</text>
+    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 559.861094)">不透明场景深度</text>
+    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(53.28 583.685156)">观察摄像机的位置与射线</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #7045a2" x="431.28" y="500.655938" transform="rotate(-0 431.28 500.655938)">体积光线步进合成</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 534.777891)">射线与世界空间盒子求交</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 556.938828)">读取密度 / 光照体积</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(431.28 579.105859)">按场景深度裁剪并累积透射率</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #a35c13" x="812.88" y="500.780781" transform="rotate(-0 812.88 500.780781)">GPU 三维流体求解</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 534.821563)">速度平流、外力、涡量约束</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 556.9825)">压力投影、密度平流</text>
+    <text style="font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #182a3a" transform="translate(812.88 579.061172)">速度 / 密度 / 压力跨帧保留</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #566b7d" x="1036.8" y="398.91375" transform="rotate(-0 1036.8 398.91375)">下一次 Update 读取</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #566b7d" x="763.2" y="524.459297" transform="rotate(-0 763.2 524.459297)">密度 / 光照</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #566b7d" x="385.2" y="524.432656" transform="rotate(-0 385.2 524.432656)">颜色 / 深度</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #566b7d" x="39.6" y="681.224063" transform="rotate(-0 39.6 681.224063)">资源归属：三维纹理由 VolumeSmokeSimulation 持有；屏幕捕获与相机合成目标由 RenderGraph 管理。</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p62d9d1bd60">
+   <rect x="0" y="0" width="1152" height="705.6"/>
+  </clipPath>
+ </defs>
+</svg>

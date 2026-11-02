@@ -1,0 +1,9 @@
+Unity 6000.5.7f1; NVIDIA GeForce RTX 4060 Laptop GPU; Direct3D12
+PASS: 64^3 grid, screen source captured 2 times, density mass 1517.1, smoke in 39 depth layers, zero density in reconstructed solid cells.
+PASS: divergence RMS 0.304400 -> 0.003589 after 32 pressure iterations.
+PASS: front/side/back renders; camera orbit and 960x540 target preserve all 262144 density voxels exactly.
+PASS: source centroid follows translation (0.174 -> 0.836); inherited motion <= 15.00; old smoke preserved.
+PASS: capture height 256 -> 512 changes voxel source rate by 1.2% rather than multiplying emission by pixel count.
+PASS: GPU-only (Read/Write disabled) mesh still produces a reconstructed source.
+PASS: explicit reset clears density; disable releases resources; original mesh remains visible. Earlier screen-space smoke example retained.
+Saved Assets/VolumeSmoke3D/VolumeSmoke3DDemo.unity

@@ -1,0 +1,14 @@
+Unity 6000.5.7f1
+URP native PBR inputs: lightmap/SH + Shadowmask + realtime shadows.
+Lightmapped receivers: 6; SH/probe fallback receivers: 1
+Distance Shadowmask: native vs custom changed pixels (>2/255): 0
+Realtime casting OFF: native vs custom changed pixels (>2/255): 0
+Custom baked mask vs white mask changed pixels: 8903
+Custom lightmap vs black GI changed pixels: 253636
+Art on baked-only shadows changed pixels: 11965
+Art changed pixels outside transition mask (>3/255): 0
+Art on self-shadow terminators (cast masks white) changed pixels: 6865
+Art on realtime/mixed shadows changed pixels: 17186
+No direct radiance: art vs unchanged GI changed pixels (>2/255): 0
+Art strength zero vs native changed pixels (>2/255): 0
+PASS: native baseline, GI/SH and masks, artistic realtime/baked penumbrae, zero-strength restoration.

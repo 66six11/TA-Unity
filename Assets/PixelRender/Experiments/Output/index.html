@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>Pixel abstraction study</title>
+<style>body{background:#19212d;color:#ddd;font:16px system-ui;margin:30px}img{max-width:100%;image-rendering:pixelated}p{max-width:1000px}</style>
+<h1>像素区域与色板联合优化：静帧实验</h1>
+<p>同一场景。左：最近邻缩小 + 16 色；中：面积缩小 + 16 色；右：区域与色板联合优化近似（16 色）。三种方法具有相同颜色预算，各自学习调色板。当前近似采用 k-means，未复现论文的 MCDA 和双边滤波，不代表论文完整结果，也不保证优于基线。不限制颜色的最近邻图另存为 Unrestricted.png。</p>
+<img src="Comparison_80x45.png"><img src="Comparison_128x72.png">
+<h2>1280×720 源图</h2><img src="Source.png">
+<h2>区域映射诊断（80×45）</h2><p>此图显示高分辨率输入的区域分配，非最终像素网格。</p><img src="80x45_Regions.png">
+<p>静态实验，无帧间稳定性约束。用门窗、树干、屋顶与栅栏检查结构；没有人物样本，不能据此得出人物识别结论。</p>

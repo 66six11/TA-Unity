@@ -1,0 +1,38 @@
+# Unity generated caches and local state
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Bb]uild/
+/[Bb]uilds/
+/[Pp]rofilerCaptures/
+/[Mm]emoryCaptures/
+/.vs/
+/.idea/
+/.vscode/
+/.pixelrender-venv/
+**/__pycache__/
+*.pyc
+*.csproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.pidb
+*.booproj
+*.opendb
+*.VC.db
+*.log
+.DS_Store
+Thumbs.db
+# Redundant local archive; source Assets are tracked instead
+/Assets.rar
+# Local credentials / environment
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.keystore
+*.jks

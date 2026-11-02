@@ -1,0 +1,10 @@
+Unity 6000.5.7f1
+Native URP Lit + Unity Mixed Shadowmask
+Lightmaps: 2; Shadowmask textures: 2; Sun mask channel: 0
+Lighting data: Assets/UnityShadowBakeTest/UnityShadowBakeTest/LightingData.asset
+Shadowmask: Assets/UnityShadowBakeTest/UnityShadowBakeTest/Lightmap-0_comp_shadowmask.png
+Shadowmask: Assets/UnityShadowBakeTest/UnityShadowBakeTest/Lightmap-1_comp_shadowmask.png
+Visible test geometry pixels: 258376
+Realtime mesh shadow casting: OFF during comparison.
+Baked mask versus white mask changed pixels: 11047
+PASS: native Unity bake produced masks and URP Lit uses them without realtime mesh shadows.

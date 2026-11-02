@@ -1,0 +1,4 @@
+{
+    "name": "TA.ScreenSpaceFluid",
+    "references": ["TA.SurfaceDustGpu", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"]
+}

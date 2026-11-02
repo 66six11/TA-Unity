@@ -1,0 +1,4 @@
+{
+    "name": "TA.VolumeSmoke3D",
+    "references": ["Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime", "Unity.InputSystem"]
+}

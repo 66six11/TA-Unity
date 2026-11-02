@@ -1,0 +1,5 @@
+{
+    "name": "TA.ScreenSpaceFluid.Editor",
+    "references": ["TA.ScreenSpaceFluid", "TA.SurfaceDustGpu", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"],
+    "includePlatforms": ["Editor"]
+}

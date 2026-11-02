@@ -1,0 +1,178 @@
+#pragma kernel Clear
+#pragma kernel AdvectVelocity
+#pragma kernel Forces
+#pragma kernel ComputeCurl
+#pragma kernel Confinement
+#pragma kernel ComputeDivergence
+#pragma kernel Jacobi
+#pragma kernel Project
+#pragma kernel AdvectDye
+
+Texture2D<float> _Mask;
+Texture2D<float2> _VelocityRead;
+RWTexture2D<float2> _VelocityOut;
+Texture2D<float4> _DyeRead;
+RWTexture2D<float4> _DyeOut;
+Texture2D<float> _PressureRead, _CurlRead, _DivergenceRead;
+RWTexture2D<float> _PressureOut, _CurlOut, _DivergenceOut;
+SamplerState sampler_linear_clamp;
+int2 _Size;
+float _Dt, _TimeValue;
+float4 _Source; // center in top-origin UV, vortex radius in screen-height units, reserved
+float4 _Forces; // emission, outward acceleration, buoyancy, confinement
+float4 _Flow; // wind in screen-height units, vortex force, velocity damping
+float4 _DyeColor;
+float _Dissipation;
+
+int2 ClampCell(int2 p) { return clamp(p, int2(0,0), _Size - 1); }
+bool Outside(int2 p) { return any(p < 1) || any(p >= _Size - 1); }
+bool Solid(int2 p) { return Outside(p) || _Mask.Load(int3(ClampCell(p), 0)) > 0.5; }
+float Mask(int2 p) { return _Mask.Load(int3(ClampCell(p), 0)); }
+float2 Velocity(int2 p) { return _VelocityRead.Load(int3(ClampCell(p), 0)); }
+float Pressure(int2 p, float center) { return Solid(p) ? center : _PressureRead.Load(int3(p, 0)); }
+float Curl(int2 p) { return _CurlRead.Load(int3(ClampCell(p), 0)); }
+
+float SourceBand(int2 p, out float2 normal)
+{
+    // A narrow band immediately outside the projected model silhouette.
+    const int r = 4;
+    float l = Mask(p - int2(r,0)), right = Mask(p + int2(r,0));
+    float top = Mask(p - int2(0,r)), bottom = Mask(p + int2(0,r));
+    float2 gradient = float2(right - l, bottom - top);
+    normal = -gradient / max(length(gradient), 1e-5);
+    return max(max(l, right), max(top, bottom)) * (1 - Mask(p));
+}
+
+[numthreads(8,8,1)]
+void Clear(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    _VelocityOut[id.xy] = 0; _DyeOut[id.xy] = 0;
+    _PressureOut[id.xy] = 0; _CurlOut[id.xy] = 0; _DivergenceOut[id.xy] = 0;
+}
+
+[numthreads(8,8,1)]
+void AdvectVelocity(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    float2 uv = (p + 0.5) / _Size;
+    float2 back = uv - Velocity(p) * _Dt / _Size;
+    // Do not advect through the projected source obstacle.
+    if (_Mask.SampleLevel(sampler_linear_clamp, back, 0) > 0.5) back = uv;
+    float2 velocity = _VelocityRead.SampleLevel(sampler_linear_clamp, back, 0) * exp(-_Flow.w * _Dt);
+    _VelocityOut[p] = Solid(p) ? 0 : velocity;
+}
+
+float2 VortexForce(float2 p, float2 center, float radius, float signValue)
+{
+    float2 radial = p - center;
+    float weight = exp(-dot(radial, radial) / max(radius * radius, 1));
+    return float2(-radial.y, radial.x) * signValue * weight;
+}
+
+[numthreads(8,8,1)]
+void Forces(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    if (Solid(p)) { _VelocityOut[p] = 0; return; }
+    float2 normal;
+    float band = SourceBand(p, normal);
+    float2 uv = (p + 0.5) / _Size;
+    float modulation = 0.4 + 0.6 * pow(0.5 + 0.5 * sin(uv.x * 37 + uv.y * 29 + _TimeValue * 1.7), 2);
+    float density = _DyeRead.Load(int3(p,0)).a;
+    float2 acceleration = _Flow.xy * _Size.y;
+    acceleration += normal * band * modulation * _Forces.y * _Size.y;
+    acceleration.y -= min(density, 3) * _Forces.z * _Size.y;
+    float2 center = _Source.xy * _Size;
+    float radius = _Source.z * _Size.y;
+    acceleration += (VortexForce(p, center + float2(-radius * 0.9, -radius * 0.25), radius, 1)
+                  + VortexForce(p, center + float2(radius * 0.9, -radius * 0.25), radius, -1)) * _Flow.z;
+    _VelocityOut[p] = Velocity(p) + acceleration * _Dt;
+}
+
+[numthreads(8,8,1)]
+void ComputeCurl(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    float curl = 0.5 * (Velocity(p + int2(1,0)).y - Velocity(p - int2(1,0)).y
+                          - Velocity(p + int2(0,1)).x + Velocity(p - int2(0,1)).x);
+    _CurlOut[p] = Solid(p) ? 0 : curl;
+}
+
+[numthreads(8,8,1)]
+void Confinement(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    float2 gradient = 0.5 * float2(abs(Curl(p + int2(1,0))) - abs(Curl(p - int2(1,0))),
+                                 abs(Curl(p + int2(0,1))) - abs(Curl(p - int2(0,1))));
+    float2 n = gradient / max(length(gradient), 1e-5);
+    float2 force = float2(n.y, -n.x) * Curl(p) * _Forces.w;
+    _VelocityOut[p] = Solid(p) ? 0 : Velocity(p) + force * _Dt;
+}
+
+[numthreads(8,8,1)]
+void ComputeDivergence(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    // Matched forward divergence / backward pressure gradient yields the same
+    // nearest-neighbor Laplacian solved by Jacobi (avoids a stride-2 checkerboard nullspace).
+    float right = Solid(p + int2(1,0)) ? 0 : Velocity(p + int2(1,0)).x;
+    float bottom = Solid(p + int2(0,1)) ? 0 : Velocity(p + int2(0,1)).y;
+    float left = Solid(p - int2(1,0)) ? 0 : Velocity(p).x;
+    float top = Solid(p - int2(0,1)) ? 0 : Velocity(p).y;
+    float div = right - left + bottom - top;
+    _DivergenceOut[p] = Solid(p) ? 0 : div;
+}
+
+[numthreads(8,8,1)]
+void Jacobi(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    float center = _PressureRead.Load(int3(p,0));
+    float sum = Pressure(p-int2(1,0), center) + Pressure(p+int2(1,0), center)
+              + Pressure(p-int2(0,1), center) + Pressure(p+int2(0,1), center);
+    _PressureOut[p] = Solid(p) ? 0 : (sum - _DivergenceRead.Load(int3(p,0))) * 0.25;
+}
+
+[numthreads(8,8,1)]
+void Project(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    float center = _PressureRead.Load(int3(p,0));
+    float2 gradient = float2(center - Pressure(p-int2(1,0),center),
+                             center - Pressure(p-int2(0,1),center));
+    float2 velocity = Velocity(p) - gradient;
+    if (Solid(p-int2(1,0))) velocity.x = 0;
+    if (Solid(p-int2(0,1))) velocity.y = 0;
+    // Bound the artistic force controls, not an incompressibility guarantee.
+    velocity *= min(1, _Size.y * 0.7 / max(length(velocity), 1e-5));
+    _VelocityOut[p] = Solid(p) ? 0 : velocity;
+}
+
+[numthreads(8,8,1)]
+void AdvectDye(uint3 id : SV_DispatchThreadID)
+{
+    if (any(id.xy >= (uint2)_Size)) return;
+    int2 p = id.xy;
+    float2 uv = (p + 0.5) / _Size;
+    float2 back = uv - Velocity(p) * _Dt / _Size;
+    if (_Mask.SampleLevel(sampler_linear_clamp, back, 0) > 0.5) back = uv;
+    float4 dye = _DyeRead.SampleLevel(sampler_linear_clamp, back, 0) * exp(-_Dissipation * _Dt);
+    float2 normal;
+    float band = SourceBand(p, normal);
+    float modulation = 0.4 + 0.6 * pow(0.5 + 0.5 * sin(uv.x * 37 + uv.y * 29 + _TimeValue * 1.7), 2);
+    float amount = band * modulation * _Forces.x * _Dt;
+    float tint = 0.5 + 0.5 * sin(uv.x * 12 + uv.y * 17 + _TimeValue * 0.6);
+    dye += float4(lerp(_DyeColor.rgb * 0.55, _DyeColor.rgb, tint), 1) * amount;
+    // Absorbing screen border; leave no clamped dye stripe at screen edges.
+    float edge = min(min(p.x, _Size.x-1-p.x), min(p.y, _Size.y-1-p.y));
+    dye *= saturate(edge / 4.0);
+    _DyeOut[p] = Solid(p) ? 0 : min(dye, 12);
+}

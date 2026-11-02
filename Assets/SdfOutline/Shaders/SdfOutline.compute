@@ -1,0 +1,79 @@
+#pragma kernel Seed
+#pragma kernel Jump
+#pragma kernel Distance
+Texture2D<float> _Mask;
+Texture2D<float2> _Seeds;
+RWTexture2D<float2> _SeedsOut;
+RWTexture2D<float> _DistanceOut;
+float4 _Size;
+int _Step;
+bool InBounds(int2 p) { return all(p >= 0) && all(p < (int2)_Size.xy); }
+[numthreads(8,8,1)]
+void Seed(uint3 id : SV_DispatchThreadID)
+{
+    int2 p = id.xy; if (!InBounds(p)) return;
+    bool inside = _Mask[p] > 0.5;
+    float2 best = float2(-1,-1);
+    // Midpoints of opposite-class pixel pairs approximate the silhouette at half-pixel precision.
+    const int2 offsets[4] = { int2(-1,0), int2(1,0), int2(0,-1), int2(0,1) };
+    for (int i=0; i<4; i++)
+    {
+        int2 q = p + offsets[i];
+        // Outside the viewport is unknown, not an artificial object edge.
+        if (InBounds(q) && ((_Mask[q] > 0.5) != inside)) { best = (float2)p + offsets[i]*0.5; break; }
+    }
+    _SeedsOut[p] = best;
+}
+[numthreads(8,8,1)]
+void Jump(uint3 id : SV_DispatchThreadID)
+{
+    int2 p = id.xy; if (!InBounds(p)) return;
+    float2 best = float2(-1,-1); float bestD = 1e20;
+    for (int y=-1; y<=1; y++) for (int x=-1; x<=1; x++)
+    {
+        int2 q = p + int2(x,y)*_Step; if (!InBounds(q)) continue;
+        float2 seed = _Seeds[q]; if (seed.x < 0) continue;
+        float2 delta = seed - p; float d = dot(delta,delta);
+        if (d < bestD) { bestD=d; best=seed; }
+    }
+    _SeedsOut[p] = best;
+}
+[numthreads(8,8,1)]
+void Distance(uint3 id : SV_DispatchThreadID)
+{
+    int2 p = id.xy; if (!InBounds(p)) return;
+    float2 seed = _Seeds[p];
+    float d = seed.x < 0 ? 1e6 : length(seed-p);
+    _DistanceOut[p] = _Mask[p] > 0.5 ? -d : d;
+}
+
+#pragma kernel ProjectionBounds
+#pragma kernel ReduceBounds
+Texture2D<float2> _BoundsInput;
+RWTexture2D<float2> _BoundsOutput;
+float4 _BoundsSize,_ProjectionAxis;
+groupshared float2 sharedBounds[64];
+void StoreBounds(float2 value,uint index,uint2 group)
+{
+    sharedBounds[index]=value;GroupMemoryBarrierWithGroupSync();
+    for(uint stride=32;stride>0;stride>>=1)
+    {
+        if(index<stride)sharedBounds[index]=float2(min(sharedBounds[index].x,sharedBounds[index+stride].x),max(sharedBounds[index].y,sharedBounds[index+stride].y));
+        GroupMemoryBarrierWithGroupSync();
+    }
+    if(index==0)_BoundsOutput[group]=sharedBounds[0];
+}
+[numthreads(8,8,1)]
+void ProjectionBounds(uint3 id:SV_DispatchThreadID,uint3 group:SV_GroupID,uint index:SV_GroupIndex)
+{
+    float2 value=float2(1e20,-1e20);
+    if(all(id.xy<(uint2)_BoundsSize.xy)&&_Mask[id.xy]>0.5){float q=dot((float2)id.xy,_ProjectionAxis.xy);value=q.xx;}
+    StoreBounds(value,index,group.xy);
+}
+[numthreads(8,8,1)]
+void ReduceBounds(uint3 id:SV_DispatchThreadID,uint3 group:SV_GroupID,uint index:SV_GroupIndex)
+{
+    float2 value=float2(1e20,-1e20);
+    if(all(id.xy<(uint2)_BoundsSize.xy))value=_BoundsInput[id.xy];
+    StoreBounds(value,index,group.xy);
+}

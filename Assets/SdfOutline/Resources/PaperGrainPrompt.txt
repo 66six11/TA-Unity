@@ -1,0 +1,6 @@
+Generated with the built-in image_gen tool.
+Prompt:
+Use case: texture asset. Generate a single square seamless tileable grayscale rough cold-pressed cotton watercolor paper texture for a game shader. Flat orthographic macro scan, uniform illumination across the whole image. Mid-gray average value, tiny irregular paper fibers, fine pits, subtle medium scale mottling and sparse soft flecks. Natural stochastic isotropic tactile grain, high frequency detail with moderate grayscale contrast, no directional lighting, no vignette, no creases, no folds, no torn edges, no objects, no text, no border. Seamless wrapping left-right and top-bottom. Pure grayscale, no color.
+
+Runtime import uses mirrored wrapping to ensure continuous boundaries.
+Sampled source mean: 0.6355707864 (linear data texture).
